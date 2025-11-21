@@ -31,7 +31,7 @@ class Chatbot:
         output = self.model.generate(input_ids, pad_token_id=self.tokenizer.eos_token_id, do_sample=True, 
         temperature=0.9, # Higher = more randomness (range: ~0.7 to 1.2)
         top_p=0.8, # Nucleus sampling: picks from top tokens with cumulative probability <= top_p 
-        top_k=50) # Only consider the top 50 most likely tokens 
+        top_k=50)# Only consider the top 50 most likely tokens 
 
         self.chat_history_ids = output
         reply_id = output[0, input_ids.shape[1]:]
@@ -41,7 +41,7 @@ class Chatbot:
     
     def reset_history(self):
         self.chat_history_ids = None 
-        
+
 
     
 
