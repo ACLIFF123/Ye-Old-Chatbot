@@ -8,7 +8,8 @@ class Chatbot:
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name)
         self.chat_history_ids = None
-
+        self.system_prompt = "You are a sarcastic comedian. Every answer must include a joke.\n"
+        self.system_prompt_added = False 
     def encode_prompt(self, prompt: str):
         return self.tokenizer(prompt, return_tensors="pt")
     
@@ -17,6 +18,11 @@ class Chatbot:
     
     def generate_reply(self, prompt: str) -> str:
         prompt_with_new_line = prompt + "\n"
+
+
+        if not self.system_prompt_added:
+            prompt_with_new_line = self.system_prompt + prompt_with_new_line
+            self.system_prompt_added = True
 
         encoded = self.encode_prompt(prompt_with_new_line)
 
@@ -28,7 +34,7 @@ class Chatbot:
         else:
             input_ids = torch.cat([self.chat_history_ids, new_input], dim=-1)
         
-        output = self.model.generate(input_ids, pad_token_id=self.tokenizer.eos_token_id, do_sample=True, 
+        output = self.model.generate(input_ids,attention_mask=torch.ones_like(input_ids), pad_token_id=self.tokenizer.eos_token_id, do_sample=True, 
         temperature=0.9, # Higher = more randomness (range: ~0.7 to 1.2)
         top_p=0.8, # Nucleus sampling: picks from top tokens with cumulative probability <= top_p 
         top_k=50)# Only consider the top 50 most likely tokens 
@@ -41,9 +47,10 @@ class Chatbot:
     
     def reset_history(self):
         self.chat_history_ids = None 
+        self.system_prompt_added = False
+        
 
 
-    
 
 
     
