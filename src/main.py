@@ -1,25 +1,33 @@
 from chatbot import Chatbot
 
-bot = Chatbot()
-# encoded = bot.encode_prompt("Hello, how are you?")
-# reply = bot.decode_reply([15496, 703, 345, 30]) # Pass in a string of generated token IDs here from your tokenizer
 
-# print(encoded) 
-# print(reply)
+def main():
+    bot = Chatbot()
+
+    print("===================================")
+    print("Welcome to Your Chatbot!")
+    print("===================================\n")
+
+    
+    print("System Prompt:")
+    print(bot.system_prompt)
+    print("-----------------------------------\n")
+
+    while True:
+        # Get user input
+        user_input = input("User: ")
+
+        # Exit condition
+        if user_input.lower() in ["quit", "exit"]:
+            print("\n Goodbye!")
+            break
+
+        # Get bot reply
+        reply = bot.generate_reply(user_input)
+
+        
+        print(f"Bot: {reply}\n")
 
 
-# prompt = "What is the weather like today?"
-# reply = bot.generate_reply(prompt)
-# print(f"Prompt: {prompt}")
-# print(f"Reply: {reply}")
-
-prompts = [
-    "What's your name?",
-    "What do you think about AI?",
-    "Sorry, tell me your name again."
-]
-
-for prompt in prompts:
-    reply = bot.generate_reply(prompt)
-    print(f"Prompt: {prompt}")
-    print(f"Reply: {reply}\n")
+if __name__ == "__main__":
+    main()
